@@ -1,32 +1,40 @@
 import country
-import random
+import DipConts
 
 class World(object):
 
-	def __init__(self, names = ["country1", "country2", "country3", "country4"], players = ["player1", "player2", "player3", "player4"], resources = random.randint(0,1000), lands = [[1,2,3],[4,5,6],[7,8,9],[10,11,12]] ):
-		self.players = players
-		self.resources = resources
-		countries = []
-		for i in range(len(players)):
-			countries.append(country.Country( names[i], players[i], lands[i]))
-		self.countries = countries
-		self.lands = lands
+	def __init__(self, users = [ player1, player2, player3, player4, player5, player6, player7], nations = DipConts.Countries, locs = DipConts.Locations, supcents = DipConts.SupplyCenters, adjLocs = DipConts.AdjacentLocations):
+		self.countries = []
+
+		for i in range(countries):
+			self.countries.append( country.Country( nations[i]["Locations"], nations[i]["SupplyCenters"], nations[i]["Name"], users[i]))
+		self.locs = locs
+		self.supcents = supcents
+		self.adjLocs = adjLocs
+
+	def update(self, actions):
+		pass
+
+	def conflicts (self):
+		pass
+
+	def moves (self):
+		pass
+
+	def convoys (self):
+		pass
+	
+	def attacks (self):
+		pass
+
+	def supports (self):
+		pass
+
+	def reset_troops (self):
+		pass
 
 
 
+		
 
 
-	def __str__(self):
-		return "Welcome to this wonderful world! In this world, are the following countries: \n %s \n %s \n %s \n %s" % tuple(self.countries)
-
-
-
-	def findcountry(self, name):
-		for country in self.countries:
-			if country.name == name:
-				return Country
-
-
-#	def randomevents():
-wo = World()
-print wo
