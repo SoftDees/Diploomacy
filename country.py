@@ -22,21 +22,32 @@ class Country(object):
 		self.supply = supply
 		self.Name = Name
 		self.usrname = usrname
+		self.actions = []
+		
 		
 	def __str__(self):
 		return "This is the glorious country of %s." %(self.name)
 		
-	def move(Loc, Dest):
-		world.actions.append([Loc, 1, Dest, None])
+	def move(self,Loc, Dest):
+		if Dest in world.locations[Loc]:
+			self.actions.append([Loc, 'attack', Dest,1, None, self])
+			return 0
+		else:
+			return 1
 	
-	def hold(Loc):
-		world.actions.append([Loc, 2, None, None])
+	def support(self,Loc, attacked, attacking):
+		if attacking in world.locations[Loc] and attacked in world.locations[attacking]:
+			self.actions.append([Loc, 'support', attacked,1, attacking,self])
+			return 0
+		else:
+			return 1
 	
-	def support(Loc, Dest, Dest2):
-		world.actions.append([Loc, 3, Dest, Dest2])
-	
-	def convoy(Loc, Dest, Dest2):
-		world.actions.append([Loc, 4, Dest, Dest2])
+	def convoy(self,Loc, Dest, convoying):
+		if convoying in world.locations[Loc] and Dest in world.locations[convoying]:
+			self.actions.append([Loc, 'convoy', Dest,1, convoying, self])
+			return 0
+		else:
+			return 1
 	
 	def addtroop(self, Loc):
 		if Loc in self.locations:
@@ -63,4 +74,9 @@ class Country(object):
 			check = self.locations.pop(ind)
 			self.locations.append(Dest)
 			return 0
+			
+	def get_actions(self):
+		act_list = self.actions
+		self.actions = []
+		return act_list
 		
