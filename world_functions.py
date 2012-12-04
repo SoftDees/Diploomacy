@@ -41,9 +41,13 @@ class world (object):
 		attacks,convoys = self.resolve_supports(supports, attacks, convoys)
 		attacks = self.resolve_convoys(convoys, attacks)
 		approved_attacks = self.resolve_attacks(attacks, convoys, supports)
-		for attack in approved_attacks:
-			print attack
-		final_attacks = self.update(approved_attacks) 
+		#for attack in approved_attacks:
+			#print attack
+		list_attacks = []
+		for attack in attacks:
+			list_attacks.append(attacks[attack])
+		final_attacks = self.update(list_attacks) 
+		print final_attacks
 		#Do non attack retreats
 
 
@@ -160,6 +164,7 @@ class world (object):
 
 					elif atk[2] == atk2[0]:
 						wait = True
+						
 			if not conflict and not retreat and not wait and not cancelled:
 				final_attacks.append(atk)
 			if retreat:
@@ -168,13 +173,13 @@ class world (object):
 				waitlist.append(atk)
 		# Remove moves from list of attacks that are approved or require more user input
 		for move in final_attacks:
-			del next_list.index(move)
+			del next_list[next_list.index(move)]
 		for move in incomplete:
-			del next_list.index(move)
+			del next_list[next_list.index(move)]
 		for move in waitlist:
-			del next_list.index(move)
+			del next_list[next_list.index(move)]
 
-		if next_list == {}:
+		if next_list == []:
 			return [final_attacks, incomplete]
 		else:
 			next_list.append(waitlist)
@@ -203,8 +208,8 @@ class world (object):
 #[Current Location, "attack", Location attacking, 1, None ,Country]
 
 		
-country1 = [["1", "attack", "2", 1, None, []],["3", "support", "2", 1, "1", []]]
-country2 = [["2", "attack", "2", 1, None,[]],["4", "attack", "10", 1, None, []], ["9", "attack", "3", 1, None, []] ]
+country1 = [["1", "attack", "2", 1, None, []],["3", "support", "2", 1, "1", []],["10", "attack", "11", 1, None, []], ["11", "attack", "12", 1, None, []], ["12", "attack", "10", 1, None, []]]
+country2 = [["2", "attack", "2", 1, None,[]],["4", "attack", "13", 1, None, []], ["9", "attack", "3", 1, None, []] ]
 country3 = [["5","convoy", "7", 1, "6", []],["6", "attack", "7", 1, None, []], ["8", "attack", "5", 1, None, []]]
 countries = (country1, country2, country3)
  #[this place, support, where the place is going, strength, who is going there]
