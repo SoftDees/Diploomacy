@@ -182,7 +182,8 @@ class world (object):
 		if next_list == []:
 			return [final_attacks, incomplete]
 		else:
-			next_list.append(waitlist)
+			for move in waitlist:
+				next_list.append(move)
 			update_return = self.update(next_list)
 			final_attacks.append(update_return[0])
 			incomplete.append(update_return[1])
