@@ -171,10 +171,13 @@ class world (object):
 			del next_list.index(move)
 		for move in incomplete:
 			del next_list.index(move)
+		for move in waitlist:
+			del next_list.index(move)
 
 		if next_list == {}:
 			return [final_attacks, incomplete]
 		else:
+			next_list.append(waitlist)
 			update_return = self.update(next_list)
 			final_attacks.append(update_return[0])
 			incomplete.append(update_return[1])
