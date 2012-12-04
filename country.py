@@ -24,7 +24,6 @@ class Country(object):
 		self.usrname = usrname
 		self.actions = []
 		
-		
 	def __str__(self):
 		return "This is the glorious country of %s." %(self.name)
 		
@@ -83,17 +82,23 @@ class Country(object):
 	def update(self, actions, incomplete):
 		for action in actions:
 			if action[5] == self:
-				self.movetroop(action[0], action[2])
+				check = self.movetroop(action[0], action[2])
+				if not check == 0:
+					error = True
 		for action in incomplete:
-			#flag 
+			if action[5] == self:
+				apple = 0
+				#self.subtroop(action[0])
+				#flag for user input OR remove troop
 				
 		
 c1 = Country([1,3,5], [2,3], "Player 1", "p123")
 c2 = Country([7], [7, 10], "Player 2", "p1234")
-print c1.addtroop(4)
+"""print c1.addtroop(4)
 print c1.movetroop(5,5)
-print c2.addtroop(10)
+print c2.addtroop(10)"""
+actlist = [[1,"attack",2, 1, None, c1]]
+c1.update(actlist,[])
+c2.update(actlist,[])
 print c1.locations
 print c2.locations
-
-		
