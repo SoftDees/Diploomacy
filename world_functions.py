@@ -47,7 +47,7 @@ class world (object):
 		for attack in attacks:
 			list_attacks.append(attacks[attack])
 		final_attacks = self.update(list_attacks) 
-		print final_attacks
+		return final_attacks
 		#Do non attack retreats
 
 
@@ -219,6 +219,36 @@ countries = (country1, country2, country3)
 wo = world(countries)
 wo.round()
 print "hi"
+
+
+def test ():
+	#test Hold and unobjected attackS
+
+	country1 = [["1", "attack", "3", 1, None, []]]
+	country2 = [["2", "attack", "2", 1, None,[]]]
+	expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
+	expected_result.sort() 
+	wo1 = world(countries)
+	results  = wo1.round()
+	results.sort() 
+	if not results == expected_result:
+		print "Failed Test1, Holds and unobjected attacks"
+
+	#test attackS
+
+
+	# 
+	country1 = [["1", "attack", "2", 1, None, []],["3", "attack", "5", 1, None, []],["4", "attack", "5", 1, "4", []], ]
+	country2 = [["2", "attack", "2", 1, None,[]],["5", "attack", "5", 1, None, []]]
+	expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
+	expected_result.sort() 
+	wo1 = world(countries)
+	results  = wo1.round()
+	results.sort() 
+	if not results == expected_result:
+		print "Failed Test1, Holds and unobjected attacks"
+
+
 		
 
 
