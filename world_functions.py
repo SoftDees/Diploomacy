@@ -2,7 +2,7 @@ class world (object):
 	
 	def __init__ (self, countries):
 		self.countries = countries
-		
+		self.locations = {1:[1,2,3,4,5,6,7,8,9,10],2:[1,2,3,4,5,6,7,8,9,10],3:[1,2,3,4,5,6,7,8,9,10],4:[1,2,3,4,5,6,7,8,9,10],5:[1,2,3,4,5,6,7,8,9,10],6:[1,2,3,4,5,6,7,8,9,10],7:[1,2,3,4,5,6,7,8,9,10],8:[1,2,3,4,5,6,7,8,9,10],9:[1,2,3,4,5,6,7,8,9,10],10:[1,2,3,4,5,6,7,8,9,10]}
 		
 	
 			
@@ -16,7 +16,7 @@ class world (object):
 	#round grabs all the moves from the countries and categorizes them. It then runs the supports to addall the strengths. Then it checks if the convoys go through. 
 	#Finally it takes the updated attacks and sees which will actually go through. Finally it checks all the approved attacks to see if there are any conflicts. 
 	# Then it updates all the countries. 
-	def round(self):
+	def turn(self):
 		round_actions=[]
 		attacks = {}
 		supports = {}
@@ -28,7 +28,8 @@ class world (object):
 		for country in self.countries:
 			#How do I clear round actioms?
 			#CHANGED HERE TO
-			for action in country:
+			actions = country.get_actions()
+			for action in actions:
 				round_actions.append(action)
 				if action[1] == "attack":
 					attacks[action[0]] = action
@@ -47,6 +48,10 @@ class world (object):
 		for attack in attacks:
 			list_attacks.append(attacks[attack])
 		final_attacks = self.update(list_attacks) 
+		
+		for country in self.countries:
+			country.update(final_attacks[0], final_attacks[1])
+			
 		return final_attacks
 		#Do non attack retreats
 
@@ -185,8 +190,10 @@ class world (object):
 			for move in waitlist:
 				next_list.append(move)
 			update_return = self.update(next_list)
-			final_attacks.append(update_return[0])
-			incomplete.append(update_return[1])
+			for attack in update_return[0]:
+				final_attacks.append(attack)
+			for incomp in update_return[1]:
+				incomplete.append(incomp)
 			return [final_attacks, incomplete]
 			
 
@@ -207,46 +214,49 @@ class world (object):
 			#Attack 
 
 #[Current Location, "attack", Location attacking, 1, None ,Country]
-
+if __name__ == "__main__":
 		
-country1 = [["1", "attack", "2", 1, None, []],["3", "support", "2", 1, "1", []],["10", "attack", "11", 1, None, []], ["11", "attack", "12", 1, None, []], ["12", "attack", "10", 1, None, []]]
-country2 = [["2", "attack", "2", 1, None,[]],["4", "attack", "13", 1, None, []], ["9", "attack", "3", 1, None, []] ]
-country3 = [["5","convoy", "7", 1, "6", []],["6", "attack", "7", 1, None, []], ["8", "attack", "5", 1, None, []]]
-countries = (country1, country2, country3)
- #[this place, support, where the place is going, strength, who is going there]
-#for convoy support  [this place, support, where the army is going, strength, where the ship is]
-# convoy [place, convoy, where thing is going, str, who is going ]
-wo = world(countries)
-wo.round()
-print "hi"
+	country1 = [["1", "attack", "2", 1, None, []],["3", "support", "2", 1, "1", []],["10", "attack", "11", 1, None, []], ["11", "attack", "12", 1, None, []], ["12", "attack", "10", 1, None, []]]
+	country2 = [["2", "attack", "2", 1, None,[]],["4", "attack", "13", 1, None, []], ["9", "attack", "3", 1, None, []] ]
+	country3 = [["5","convoy", "7", 1, "6", []],["6", "attack", "7", 1, None, []], ["8", "attack", "5", 1, None, []]]
+	countries = (country1, country2, country3)
+	 #[this place, support, where the place is going, strength, who is going there]
+	#for convoy support  [this place, support, where the army is going, strength, where the ship is]
+	# convoy [place, convoy, where thing is going, str, who is going ]
+	wo = world(countries)
+	wo.round()
+	print "hi"
 
 
-def test ():
-	#test Hold and unobjected attackS
 
-	country1 = [["1", "attack", "3", 1, None, []]]
-	country2 = [["2", "attack", "2", 1, None,[]]]
-	expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
-	expected_result.sort() 
-	wo1 = world(countries)
-	results  = wo1.round()
-	results.sort() 
-	if not results == expected_result:
-		print "Failed Test1, Holds and unobjected attacks"
+	
+	
+	def test ():
+		#test Hold and unobjected attackS
 
-	#test attackS
+		country1 = [["1", "attack", "3", 1, None, []]]
+		country2 = [["2", "attack", "2", 1, None,[]]]
+		expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
+		expected_result.sort() 
+		wo1 = world(countries)
+		results  = wo1.round()
+		results.sort() 
+		if not results == expected_result:
+			print "Failed Test1, Holds and unobjected attacks"
+
+		#test attackS
 
 
-	# 
-	country1 = [["1", "attack", "2", 1, None, []],["3", "attack", "5", 1, None, []],["4", "attack", "5", 1, "4", []], ]
-	country2 = [["2", "attack", "2", 1, None,[]],["5", "attack", "5", 1, None, []]]
-	expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
-	expected_result.sort() 
-	wo1 = world(countries)
-	results  = wo1.round()
-	results.sort() 
-	if not results == expected_result:
-		print "Failed Test1, Holds and unobjected attacks"
+		# 
+		country1 = [["1", "attack", "2", 1, None, []],["3", "attack", "5", 1, None, []],["4", "attack", "5", 1, "4", []], ]
+		country2 = [["2", "attack", "2", 1, None,[]],["5", "attack", "5", 1, None, []]]
+		expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
+		expected_result.sort() 
+		wo1 = world(countries)
+		results  = wo1.round()
+		results.sort() 
+		if not results == expected_result:
+			print "Failed Test1, Holds and unobjected attacks"
 
 
 		

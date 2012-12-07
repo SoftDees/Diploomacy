@@ -1,4 +1,4 @@
-import random
+from world_functions import *
 class Country(object):
     
 	"""
@@ -26,6 +26,9 @@ class Country(object):
 		
 	def __str__(self):
 		return "This is the glorious country of %s." %(self.name)
+		
+	def hold(self,Loc):
+		self.actions.append([Loc,'attack', Loc, 1, None, self])	
 		
 	def move(self,Loc, Dest, world):
 		if Dest in world.locations[Loc]:
@@ -81,6 +84,7 @@ class Country(object):
 		
 	def update(self, actions, incomplete):
 		for action in actions:
+			print action
 			if action[5] == self:
 				check = self.movetroop(action[0], action[2])
 				if not check == 0:
@@ -88,17 +92,43 @@ class Country(object):
 		for action in incomplete:
 			if action[5] == self:
 				apple = 0
-				#self.subtroop(action[0])
+				self.subtroop(action[0])
 				#flag for user input OR remove troop
 				
-		
-c1 = Country([1,3,5], [2,3], "Player 1", "p123")
-c2 = Country([7], [7, 10], "Player 2", "p1234")
-"""print c1.addtroop(4)
-print c1.movetroop(5,5)
-print c2.addtroop(10)"""
-actlist = [[1,"attack",2, 1, None, c1]]
-c1.update(actlist,[])
-c2.update(actlist,[])
-print c1.locations
-print c2.locations
+if __name__ == "__main__":
+	
+	
+	c1 = Country([1,3,5], [2,3], "Player 1", "p123")
+	c2 = Country([7], [7, 10], "Player 2", "p1234")
+	c3 = Country([6,8,9], [8,9], "Player 3", "p12345")
+	w1 = world([c1,c2,c3])
+	
+	c1.move(1,2,w1)
+	c1.move(3,7,w1)
+	c1.hold(5)
+	
+	c2.hold(7)
+	
+	c3.move(6,5,w1)
+	c3.support(8,5,6,w1)
+	c3.hold(9)
+	
+	w1.turn()
+	
+	print c1.locations
+	print c2.locations
+	print c3.locations
+	
+	
+	"""c1 = Country([1,3,5], [2,3], "Player 1", "p123")
+	c2 = Country([7], [7, 10], "Player 2", "p1234")
+	print c1.addtroop(4)
+	print c1.movetroop(5,5)
+	print c2.addtroop(10)
+	actlist = [[1,"attack",2, 1, None, c1]]
+	c1.update(actlist,[])
+	c2.update(actlist,[])
+	print c1.locations
+	print c2.locations"""
+	
+	
