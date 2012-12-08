@@ -37,7 +37,6 @@ class world (object):
 					supports[action[0]] = action
 				if action[1] == "convoy":
 					convoys[action[0]] = action
-		print attacks
 		#self.attacks(attacks)
 		attacks,convoys = self.resolve_supports(supports, attacks, convoys)
 		attacks = self.resolve_convoys(convoys, attacks)
@@ -225,6 +224,7 @@ if __name__ == "__main__":
 	# convoy [place, convoy, where thing is going, str, who is going ]
 	wo = world(countries)
 	wo.round()
+	
 	print "hi"
 
 

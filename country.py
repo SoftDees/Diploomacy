@@ -78,13 +78,21 @@ class Country(object):
 			return 0
 			
 	def get_actions(self):
+		#Add hold command for all locations without orders
+		for locate in self.locations:
+			hold = False
+			for act in self.actions:
+				if act[0] == locate:
+					hold = True
+			if hold == False:
+				self.hold(locate)
+				
 		act_list = self.actions
 		self.actions = []
 		return act_list
 		
 	def update(self, actions, incomplete):
 		for action in actions:
-			print action
 			if action[5] == self:
 				check = self.movetroop(action[0], action[2])
 				if not check == 0:
@@ -105,7 +113,7 @@ if __name__ == "__main__":
 	
 	c1.move(1,2,w1)
 	c1.move(3,7,w1)
-	c1.hold(5)
+	
 	
 	c2.hold(7)
 	
