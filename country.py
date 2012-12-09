@@ -99,9 +99,16 @@ class Country(object):
 					error = True
 		for action in incomplete:
 			if action[5] == self:
-				apple = 0
 				self.subtroop(action[0])
 				#flag for user input OR remove troop
+				
+		if world.fall:
+			if len(self.supply) > len(self.locations):
+				#message to user for adding troops
+				apple = 0
+			elif len(self.supply) < len(self.locations):
+				#message to user for subtracting troops
+				apple = 0
 				
 if __name__ == "__main__":
 	
