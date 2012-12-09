@@ -3,7 +3,7 @@ class world (object):
 	def __init__ (self, countries):
 		self.countries = countries
 		self.locations = {1:[1,2,3,4,5,6,7,8,9,10],2:[1,2,3,4,5,6,7,8,9,10],3:[1,2,3,4,5,6,7,8,9,10],4:[1,2,3,4,5,6,7,8,9,10],5:[1,2,3,4,5,6,7,8,9,10],6:[1,2,3,4,5,6,7,8,9,10],7:[1,2,3,4,5,6,7,8,9,10],8:[1,2,3,4,5,6,7,8,9,10],9:[1,2,3,4,5,6,7,8,9,10],10:[1,2,3,4,5,6,7,8,9,10]}
-		self.fall = False
+		self.fall = True
 		
 	
 			
@@ -51,7 +51,9 @@ class world (object):
 		final_attacks = self.update(list_attacks) 
 		
 		for country in self.countries:
-			country.update(final_attacks[0], final_attacks[1])
+			country.update(final_attacks[0], final_attacks[1],self)
+			
+		self.update_supply()
 			
 		return final_attacks
 		#Do non attack retreats
@@ -192,14 +194,15 @@ class world (object):
 			del next_list[next_list.index(move)]
 		for move in incomplete:
 			del next_list[next_list.index(move)]
-		for move in waitlist:
-			del next_list[next_list.index(move)]
+		#for move in waitlist:
+		#	del next_list[next_list.index(move)]
 
-		if next_list == []:
+		if next_list == waitlist:
+			final_attacks.extend(waitlist)
 			return [final_attacks, incomplete]
 		else:
-			for move in waitlist:
-				next_list.append(move)
+			#for move in waitlist:
+			#	next_list.append(move)
 			update_return = self.update(next_list)
 			for attack in update_return[0]:
 				final_attacks.append(attack)
@@ -208,7 +211,25 @@ class world (object):
 			return [final_attacks, incomplete]
 			
 
-
+	def update_supply(self):
+		loc_list = []
+		sup_list = []
+		for country in self.countries:
+			for loc in country.locations:
+				loc_list.append([loc, country])
+			for sup in country.supply:
+				sup_list.append([sup, country])
+		
+		for loc in loc_list:
+			for sup in sup_list:
+				if loc[0] == sup[0]:
+					sup[1] = loc[1]
+		
+		for country in self.countries:
+			country.supply = []
+		
+		for sup in sup_list:
+			sup[1].supply.append(sup[0])
 
 #if attacking its strength cannot defend it 
 #update non attack

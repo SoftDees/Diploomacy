@@ -91,7 +91,8 @@ class Country(object):
 		self.actions = []
 		return act_list
 		
-	def update(self, actions, incomplete):
+		
+	def update(self, actions, incomplete, world):
 		for action in actions:
 			if action[5] == self:
 				check = self.movetroop(action[0], action[2])
@@ -104,11 +105,14 @@ class Country(object):
 				
 		if world.fall:
 			if len(self.supply) > len(self.locations):
-				#message to user for adding troops
-				apple = 0
+				#message to user for adding troops or add troops at random supply center
+				apple = 1
+				print apple
 			elif len(self.supply) < len(self.locations):
-				#message to user for subtracting troops
+				#message to user for subtracting troops or remove random army
 				apple = 0
+				print apple
+				
 				
 if __name__ == "__main__":
 	
@@ -118,17 +122,35 @@ if __name__ == "__main__":
 	c3 = Country([6,8,9], [8,9], "Player 3", "p12345")
 	w1 = world([c1,c2,c3])
 	
-	c1.move(1,7,w1)
-	c1.support(3,7,1,w1)
-	c2.move(7,1,w1)
+	def test_1(world): #success
+		world.countries[0].move(1,7,w1)
+		world.countries[0].support(3,7,1,w1)
+		world.countries[1].move(7,1,w1)
 	
+	def test_2(world): #success
+		world.countries[0].move(1,3,w1)
+		world.countries[0].move(3,5,w1)
+		world.countries[0].move(5,7,w1)
+		world.countries[2].support(6,7,5,w1)
+		world.countries[1].hold(7)
+		
+	def test_3(world): #success
+		world.countries[0].move(1,3,w1)
+		world.countries[0].move(3,4,w1)
+		
+	def test_4(world):
+		
+		apple = 0
 	
-	
+	test_2(w1)
 	w1.turn()
 	
-	print c1.locations
-	print c2.locations
-	print c3.locations
+	for country in w1.countries:
+		print country.locations
+		print country.supply
+		print 
+	
+	w1.turn()
 	
 	
 	"""c1 = Country([1,3,5], [2,3], "Player 1", "p123")
