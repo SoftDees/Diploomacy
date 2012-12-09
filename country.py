@@ -1,4 +1,5 @@
 from world_functions import *
+import random
 class Country(object):
     
 	"""
@@ -23,6 +24,7 @@ class Country(object):
 		self.Name = Name
 		self.usrname = usrname
 		self.actions = []
+		self.original = supply
 		
 	def __str__(self):
 		return "This is the glorious country of %s." %(self.name)
@@ -102,17 +104,23 @@ class Country(object):
 			if action[5] == self:
 				self.subtroop(action[0])
 				#flag for user input OR remove troop
+			
+		world.update_supply()	
 				
 		if world.fall:
 			if len(self.supply) > len(self.locations):
 				#message to user for adding troops or add troops at random supply center
-				apple = 1
-				print apple
+				viable = []
+				for supply in self.supply:
+					if supply not in self.locations and supply in self.original:
+						viable.append(supply)
+				
+				if not viable == []:
+					self.addtroop(random.choice(viable))
+					
 			elif len(self.supply) < len(self.locations):
 				#message to user for subtracting troops or remove random army
-				apple = 0
-				print apple
-				
+				self.subtroop(random.choice(self.locations))			
 				
 if __name__ == "__main__":
 	
@@ -144,13 +152,14 @@ if __name__ == "__main__":
 	
 	test_2(w1)
 	w1.turn()
+	w1.turn()
 	
 	for country in w1.countries:
 		print country.locations
 		print country.supply
 		print 
 	
-	w1.turn()
+	
 	
 	
 	"""c1 = Country([1,3,5], [2,3], "Player 1", "p123")

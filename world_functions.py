@@ -5,6 +5,7 @@ class world (object):
 		self.locations = {1:[1,2,3,4,5,6,7,8,9,10],2:[1,2,3,4,5,6,7,8,9,10],3:[1,2,3,4,5,6,7,8,9,10],4:[1,2,3,4,5,6,7,8,9,10],5:[1,2,3,4,5,6,7,8,9,10],6:[1,2,3,4,5,6,7,8,9,10],7:[1,2,3,4,5,6,7,8,9,10],8:[1,2,3,4,5,6,7,8,9,10],9:[1,2,3,4,5,6,7,8,9,10],10:[1,2,3,4,5,6,7,8,9,10]}
 		self.fall = True
 		
+		
 	
 			
 	def update(self, actions):
@@ -52,8 +53,6 @@ class world (object):
 		
 		for country in self.countries:
 			country.update(final_attacks[0], final_attacks[1],self)
-			
-		self.update_supply()
 			
 		return final_attacks
 		#Do non attack retreats
