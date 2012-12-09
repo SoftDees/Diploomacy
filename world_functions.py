@@ -160,14 +160,24 @@ class world (object):
 								atk[3] = 1
 							else:
 								conflict = True
-								atk[2] = atk [0]
+								atk[2] = atk[0]
 								atk[3] = 1
 								atk2[2] = atk2[0]
 								atk2[3] = 1
 							
 
 					elif atk[2] == atk2[0]:
-						wait = True
+						if atk2[2] == atk[0]:
+							if atk[3] < atk2[3]:
+								retreat = True
+							elif atk[3] == atk2[3]:
+								conflict = True
+								atk[2] = atk[0]
+								atk[3] = 1
+								atk2[2] = atk2[0]
+								atk2[3] = 1
+						else:
+							wait = True
 						
 			if not conflict and not retreat and not wait and not cancelled:
 				final_attacks.append(atk)

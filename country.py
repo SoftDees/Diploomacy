@@ -111,15 +111,11 @@ if __name__ == "__main__":
 	c3 = Country([6,8,9], [8,9], "Player 3", "p12345")
 	w1 = world([c1,c2,c3])
 	
-	c1.move(1,2,w1)
-	c1.move(3,7,w1)
+	c1.move(1,7,w1)
+	c1.support(3,7,1,w1)
+	c2.move(7,1,w1)
 	
 	
-	c2.hold(7)
-	
-	c3.move(6,5,w1)
-	c3.support(8,5,6,w1)
-	c3.hold(9)
 	
 	w1.turn()
 	
