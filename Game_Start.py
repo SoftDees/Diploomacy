@@ -1,4 +1,3 @@
-
 from country import *
 from world_functions import *
 from make_map import *
@@ -11,7 +10,7 @@ CCS = ["LDK", "FAC", "DIH"]
 MHL = {"LIB": "A","MEZ": "A","ADM": "F"}
 MHS = ["LIB","MEZ","ADM"]
 
-WHL = {"WHN": "A" , "EWF":"F", "WHE":"A"}
+WHL = {"WHN": "A" , "WHW":"F", "WHE":"A"}
 WHS = ["WHN", "WHW", "WHE"]
 
 EHL = {"EHN": "A","EHW":"A","EHE":"F"}
