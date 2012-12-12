@@ -367,6 +367,9 @@ class world (object):
 				loc_list.append([loc, country])
 			for sup in country.supply:
 				sup_list.append([sup, country])
+			"""for sup in self.supplys:
+				if sup not in sup_list:
+					sup_list.append([sup,None])"""
 		
 		for loc in loc_list:
 			for sup in sup_list:
@@ -374,7 +377,7 @@ class world (object):
 					sup[1] = loc[1]
 			if loc == "TTT":
 				print loc
-			if not loc[0] in sup_list and loc[0] in self.supplys:
+			if [loc[0],loc[1]] not in sup_list and loc[0] in self.supplys:
 				sup_list.append([loc[0], loc[1]])
 		
 		for country in self.countries:

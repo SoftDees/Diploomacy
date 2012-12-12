@@ -28,7 +28,7 @@ class Country(object):
 		self.color = color
 		
 	def __str__(self):
-		return "This is the glorious country of %s." %(self.name)
+		return "This is the glorious country of %s." %(self.Name)
 		
 	def hold(self,Loc):
 		self.actions.append([Loc,'attack', Loc, 1, None, self])	
@@ -143,7 +143,7 @@ class Country(object):
 					
 			elif len(self.supply) < len(self.locations):
 				#message to user for subtracting troops or remove random army
-				self.subtroop(random.choice(self.locations))			
+				self.subtroop(random.choice(self.locations.keys()))			
 				
 if __name__ == "__main__":
 	
