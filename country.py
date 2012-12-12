@@ -74,17 +74,17 @@ class Country(object):
 			return 1
 	
 	def addtroop(self, Loc): #Method for adding troops
-		if Loc in self.locations: 
+		"""if Loc in self.locations: 
 			return 1
 		elif len(self.locations) >= len(self.supply):
 			return 2
-		else:
-			if Loc in world.locations:
-				self.locations[Loc] = 'A'
-				return 0
-			elif Loc in world.water:
-				self.locations[Loc] = 'F'
-				return 0
+		else:"""
+		if Loc in world.locations:
+			self.locations[Loc] = 'A'
+			return 0
+		elif Loc in world.water:
+			self.locations[Loc] = 'F'
+			return 0
 	
 	def subtroop(self, Loc):	#Method for removing troops
 		if Loc not in self.locations:
@@ -99,19 +99,19 @@ class Country(object):
 		else:
 			type_mil = self.locations[Loc]
 			check = self.locations.pop(Loc)
-			self.locations[Loc] = type_mil
+			self.locations[Dest] = type_mil
 			return 0
 			
 	def get_actions(self):
 		#Add hold command for all locations without orders
 		for locate in self.locations:
-			hold = False
+			move = False
 			for act in self.actions:
 				if act[0] == locate:
-					hold = True
-			if hold == False:
+					move = True
+			if move == False:
 				self.hold(locate)
-				
+		
 		act_list = self.actions
 		self.actions = []
 		return act_list

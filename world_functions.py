@@ -167,16 +167,17 @@ class world (object):
 			#How do I clear round actioms?
 			#CHANGED HERE TO
 			actions = country.get_actions()
+			
 			for action in actions:
 				round_actions.append(action)
-				print attacks
-				print action
+				
 				if action[1] == "attack":
 					attacks[action[0]] = action
 				if action[1] == "support":
 					supports[action[0]] = action
 				if action[1] == "convoy":
 					convoys[action[0]] = action
+
 		#self.attacks(attacks)
 		attacks,convoys = self.resolve_supports(supports, attacks, convoys)
 		attacks = self.resolve_convoys(convoys, attacks)
@@ -190,7 +191,7 @@ class world (object):
 		
 		for country in self.countries:
 			country.update(final_attacks[0], final_attacks[1],self)
-			
+
 		return final_attacks
 		#Do non attack retreats
 
@@ -237,11 +238,14 @@ class world (object):
 						attacks[convoys[convoy][4]][2] = attacks[convoys[convoy][4]][0]
 		
 		for attack in attacks:
+			atk = True
 			if attacks[attack][2] not in self.locations[attacks[attack][0]]:
+				atk = False
 				#check if being convoyed
 				for convoy in convoys:
 					if attacks[attack][0] == convoys[convoy][4] and attacks[attack][2] == convoys[convoy][2]:
 						atk = True
+
 				if not atk:
 					attacks[attack][2] = attacks[attack][0]		
 		return attacks
