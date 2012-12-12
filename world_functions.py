@@ -179,10 +179,13 @@ class world (object):
 						attacks[convoys[convoy][4]][2] = attacks[convoys[convoy][4]][0]
 		
 		for attack in attacks:
-			if attack[2] not in self.locations[attack[0]]:
+			if attacks[attack][2] not in self.locations[attacks[attack][0]]:
 				#check if being convoyed
-				for convoy
-				if attack[0] 				
+				for convoy in convoys:
+					if attacks[attack][0] == convoys[convoy][4] and attacks[attack][2] == convoys[convoy][2]:
+						atk = True
+				if not atk:
+					attacks[attack][2] = attacks[attack][0]		
 		return attacks
 
 	def resolve_attacks (self, attacks, convoys, supports):

@@ -17,7 +17,7 @@ class Country(object):
         return "This is the glorious country of %s. Our hallowed leader is %s." % (self.name,self.president)
 """
 
-	def __init__(self, Locations, supply, Name, usrname):
+	def __init__(self, Locations, supply, Name, usrname, color):
 		
 		self.locations = Locations
 		self.supply = supply
@@ -25,6 +25,7 @@ class Country(object):
 		self.usrname = usrname
 		self.actions = []
 		self.original = supply
+		self.color = color
 		
 	def __str__(self):
 		return "This is the glorious country of %s." %(self.name)
@@ -34,29 +35,31 @@ class Country(object):
 		
 	def move(self,Loc, Dest, world):
 		
-		if self.locations[Loc] == 'A':
+		self.actions.append([Loc, 'attack', Dest,1, None, self])
+		
+		"""if self.locations[Loc] == 'A':
 			if Dest in world.locations[Loc]:
 				self.actions.append([Loc, 'attack', Dest,1, None, self])
 				return 0
 			else:
 				return 1
-		elif self.locations[Loc] = 'F':
+		elif self.locations[Loc] == 'F':
 			if Dest in world.water[Loc]:
 				self.actions.append([Loc, 'attack', Dest, 1, None, self])
 				return 0
 			else:
 				return 1
 		else:
-			return 2
+			return 2"""
 	
 	def support(self,Loc, attacked, attacking, world):
-		if self.locations[Loc] == 'A'
+		if self.locations[Loc] == 'A':
 			if attacking in world.locations[Loc] and attacked in world.locations[attacking]:
 				self.actions.append([Loc, 'support', attacked,1, attacking,self])
 				return 0
 			else:
 				return 1
-		elif self.locations[Loc] == 'F'
+		elif self.locations[Loc] == 'F':
 			if attacking in world.water[Loc] and attacked in world.water[attacking]:
 				self.actions.append([Loc, 'support', attacked,1, attacking,self])
 				return 0
