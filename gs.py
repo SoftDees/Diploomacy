@@ -28,8 +28,23 @@ wo = world(countries)
 update_map(wo.countries, "BaseMap.png")
 EH.move('EHN', 'SGL', wo)
 EH.convoy('EHE', 'SGL', 'EHN', wo)
+EH.move('EHW', 'TTT', wo)
 wo.turn()
 update_map(wo.countries, "BaseMap.png")
+EH.move('TTT', 'MED', wo)
+wo.turn()
+update_map(wo.countries, "BaseMap.png")
+EH.move('MED', 'BBQ', wo)
+wo.turn()
+update_map(wo.countries, "BaseMap.png")
+EH.move('BBQ', 'MED', wo)
+WH.move('WHE', 'TTT', wo)
+wo.turn()
+update_map(wo.countries, "BaseMap.png")
+WH.move('TTT', 'WHE', wo)
+wo.turn()
+update_map(wo.countries, "BaseMap.png")
+
 
 print EH.locations
 

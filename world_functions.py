@@ -372,13 +372,20 @@ class world (object):
 			for sup in sup_list:
 				if loc[0] == sup[0]:
 					sup[1] = loc[1]
+			if loc == "TTT":
+				print loc
+			if not loc[0] in sup_list and loc[0] in self.supplys:
+				sup_list.append([loc[0], loc[1]])
 		
 		for country in self.countries:
 			country.supply = []
 		
 		for sup in sup_list:
 			sup[1].supply.append(sup[0])
-
+		for country in self.countries:
+			if country.Name == "EHPlayer":
+				print country.supply
+				print country.locations
 #if attacking its strength cannot defend it 
 #update non attack
 

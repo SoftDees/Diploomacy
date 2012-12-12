@@ -73,7 +73,7 @@ class Country(object):
 		else:
 			return 1
 	
-	def addtroop(self, Loc): #Method for adding troops
+	def addtroop(self, Loc,world): #Method for adding troops
 		"""if Loc in self.locations: 
 			return 1
 		elif len(self.locations) >= len(self.supply):
@@ -139,7 +139,7 @@ class Country(object):
 						viable.append(supply)
 				
 				if not viable == []:
-					self.addtroop(random.choice(viable))
+					self.addtroop(random.choice(viable), world)
 					
 			elif len(self.supply) < len(self.locations):
 				#message to user for subtracting troops or remove random army
