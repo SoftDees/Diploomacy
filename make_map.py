@@ -33,5 +33,6 @@ def update_map (countries, file):
 				draw.polygon([x+10,y, x+20, y+10, x, y+10, x+10,y ], fill = color_dict[country.color] )
 				if location in country.supply:
 					draw.chord([x+7,y+3, x+13, y+9],0,360,fill = color_dict["White"])
-				
+	im.show()			
 	im.save("edited.png")
+	

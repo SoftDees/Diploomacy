@@ -34,9 +34,11 @@ class Country(object):
 		self.actions.append([Loc,'attack', Loc, 1, None, self])	
 		
 	def move(self,Loc, Dest, world):
-		
-		self.actions.append([Loc, 'attack', Dest,1, None, self])
-		
+		if self.locations[Loc] == 'A' and not Dest in world.waterlist:	
+			self.actions.append([Loc, 'attack', Dest,1, None, self])
+		if self.locations[Loc] == 'F' and Dest in world.water:	
+			self.actions.append([Loc, 'attack', Dest,1, None, self])
+			
 		"""if self.locations[Loc] == 'A':
 			if Dest in world.locations[Loc]:
 				self.actions.append([Loc, 'attack', Dest,1, None, self])
