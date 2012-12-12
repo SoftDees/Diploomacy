@@ -79,9 +79,64 @@ class world (object):
 			'NEE':['BLF','ESC','STE','SBO','LPB','OBC'],
 			'SBO':['NEE','STE','HPV','BAJ','LPB'],
 			'STE':['ESC','HPV','SBO','NEE'],
-			'HPV':['STE','BAB','VMO','BAJ','SBO']
+			'HPV':['STE','BAB','VMO','BAJ','SBO'],
 			'BAJ':['SBO','HPV','VMO','CAC','LPB'],
 			'VMO':['HPV','BAB','MCR','BAJ']}
+			
+		self.water = {
+			'SLA':['NLA','OWO'],
+			'NLA':['SLA','HDK','OWO','OVL'],
+			'HDK':['NLA','LIB','OVL'],
+			'LIB':['HDK','SSA','OVL'],
+			'SSA':['LIB','ADM','OCR','FOF','SWP','OVL'],
+			'SWP':['OWO','OVL','SSA','FOF','NML','OSO','WEH'],
+			'WEH':['OWO','SWP','OSO'],
+			'OVL':['NLA','HDK','LIB','SSA','SWP','OWO'],
+			'OWO':['SLA','NLA','OVL','SWP','WEH','OSO'],
+			'OSO':['OWO','WEH','SWP','NML','BABO','PBO'],
+			'NML':['SWP','FOF','MEM','OSO'],
+			'FOF':['SSA','OCR','MEM','NML'],
+			'MEM':['NML','FOF','OCR','BABO'],
+			'ADM':['SSA','PML','OFA','OCR'],
+			'PML':['ADM','OFA'],
+			'DIH':['CCC'],
+			'STR':['WWS'],
+			'AND':['WWS','LDK','BAS'],
+			'LDK':['AND','TRM','BAS'],
+			'TRM':['LDK','BAS'],
+			'BAS':['TRM','LDK','AND','WWS','SLR','NLB'],
+			'SLR':['DSC','NLB','BAS'],
+			'DSC':['SLR','NWH','WWS'],
+			'NWH':['WWS','DSC','SMS'],
+			'SMS':['WWS','NWH','WHW','CCC'],
+			'WHW':['SMS','CCC','NGL'],
+			'NGL':['WHW','OFA','SHL'],
+			'SHL':['NGL','OFA','KAT'],
+			'KAT':['SHL','OCR','DIT'],
+			'DIT':['KAT','BABO','LCC'],
+			'LCC':['DIT','BABO','SGL','SSS'],
+			'SGL':['LCC','EHE','SSS'],
+			'EHE':['SGL','BYZ','SSS'],
+			'BYZ':['VIP','LBO','SSS','EHE'],
+			'VIP':['SLB','LBO','BYZ'],
+			'SLB':['NLB','LBO','VIP'],
+			'NLB':['SLR','BAS','LBO','SLB'],
+			'LBO':['BAS','NLB','SLB','VIP','BYZ','SSS','PBO'],
+			'PBO':['LBO','SSS','BABO','OSO'],
+			'SSS':['LBO','BYZ','EHE','SGL','LCC','BABO','PBO'],
+			'BABO':['LCC','SSS','PBO','OSO','MEM','OCR','DIT'],
+			'OCR':['SSA','ADM','OFA','KAT','BABO','MEM','FOF'],
+			'OFA':['OCR','ADM','PML','CCC','NGL','SHL'],
+			'CCC':['DIH','WWS','SMS','WHW'],
+			'WWS':['STR','AND','DSC','NWH','SMS','CCC'],
+			'STE':['NEE','SBO','HPV'],
+			'NEE':['STE','SBO','LPB'],
+			'LPB':['NEE','SBO','BAJ','CAC'],
+			'CAC':['LPB','BAJ'],
+			'VMO':['BAJ','HPV','BAB'],
+			'BAJ':['HPV','VMO','CAC','LPB','SBO'],
+			'SBO':['STE','NEE','LPB','BAJ','HPV'],
+			'HPV':['STE','SBO','BAJ','BAB']}
 		self.fall = True
 		
 		
@@ -113,6 +168,8 @@ class world (object):
 			actions = country.get_actions()
 			for action in actions:
 				round_actions.append(action)
+				print attacks
+				print action
 				if action[1] == "attack":
 					attacks[action[0]] = action
 				if action[1] == "support":

@@ -67,7 +67,7 @@ class Country(object):
 				return 1
 	
 	def convoy(self,Loc, Dest, convoying, world):
-		if convoying in world.water[Loc] and Dest in world.water[Loc]:
+		if (convoying in world.water[Loc] or convoying in world.locations[Loc]) and Dest in world.water[Loc]:
 			self.actions.append([Loc, 'convoy', Dest,1, convoying, self])
 			return 0
 		else:
