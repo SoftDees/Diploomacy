@@ -33,21 +33,38 @@ class Country(object):
 		self.actions.append([Loc,'attack', Loc, 1, None, self])	
 		
 	def move(self,Loc, Dest, world):
-		if Dest in world.locations[Loc]:
-			self.actions.append([Loc, 'attack', Dest,1, None, self])
-			return 0
+		
+		if self.locations[Loc] == 'A':
+			if Dest in world.locations[Loc]:
+				self.actions.append([Loc, 'attack', Dest,1, None, self])
+				return 0
+			else:
+				return 1
+		elif self.locations[Loc] = 'F':
+			if Dest in world.water[Loc]:
+				self.actions.append([Loc, 'attack', Dest, 1, None, self])
+				return 0
+			else:
+				return 1
 		else:
-			return 1
+			return 2
 	
 	def support(self,Loc, attacked, attacking, world):
-		if attacking in world.locations[Loc] and attacked in world.locations[attacking]:
-			self.actions.append([Loc, 'support', attacked,1, attacking,self])
-			return 0
-		else:
-			return 1
+		if self.locations[Loc] == 'A'
+			if attacking in world.locations[Loc] and attacked in world.locations[attacking]:
+				self.actions.append([Loc, 'support', attacked,1, attacking,self])
+				return 0
+			else:
+				return 1
+		elif self.locations[Loc] == 'F'
+			if attacking in world.water[Loc] and attacked in world.water[attacking]:
+				self.actions.append([Loc, 'support', attacked,1, attacking,self])
+				return 0
+			else:
+				return 1
 	
 	def convoy(self,Loc, Dest, convoying, world):
-		if convoying in world.locations[Loc] and Dest in world.locations[convoying]:
+		if convoying in world.water[Loc] and Dest in world.water[Loc]:
 			self.actions.append([Loc, 'convoy', Dest,1, convoying, self])
 			return 0
 		else:
@@ -59,24 +76,27 @@ class Country(object):
 		elif len(self.locations) >= len(self.supply):
 			return 2
 		else:
-			self.locations.append(Loc)
-			return 0
+			if Loc in world.locations:
+				self.locations[Loc] = 'A'
+				return 0
+			elif Loc in world.water:
+				self.locations[Loc] = 'F'
+				return 0
 	
 	def subtroop(self, Loc):	#Method for removing troops
 		if Loc not in self.locations:
 			return 1
 		else: 
-			ind = self.locations.index(Loc)
-			check = self.locations.pop(ind)
+			check = self.locations.pop(Loc)
 			return 0
 			
 	def movetroop(self, Loc, Dest): #Method for moving troops
 		if Loc not in self.locations:
 			return 1
 		else:
-			ind = self.locations.index(Loc)
-			check = self.locations.pop(ind)
-			self.locations.append(Dest)
+			type_mil = self.locations[Loc]
+			check = self.locations.pop(Loc)
+			self.locations[Loc] = type_mil
 			return 0
 			
 	def get_actions(self):
