@@ -1,21 +1,6 @@
 from world_functions import *
 import random
 class Country(object):
-    
-	"""
-    def __init__(self, name = "country", president = "leader", land = [1,2,3], economy = random.randint(0,1000), military = random.randint(0,1000), wellbeing = random.randint(0,1000) ):
-        self.name = name
-        self.president = president
-        self.land = land
-        self.economy = economy
-        self.military = military
-        self.wellbeing = wellbeing
-        self.countryscore = (economy+military+wellbeing)
-
-
-    def __str__(self):
-        return "This is the glorious country of %s. Our hallowed leader is %s." % (self.name,self.president)
-"""
 
 	def __init__(self, Locations, supply, Name, usrname, color):
 		
@@ -34,27 +19,15 @@ class Country(object):
 		self.actions.append([Loc,'attack', Loc, 1, None, self])	
 		
 	def move(self,Loc, Dest, world):
+		#Prevents armies from moving into water and fleets moving inland
 		if self.locations[Loc] == 'A' and not Dest in world.waterlist:	
 			self.actions.append([Loc, 'attack', Dest,1, None, self])
 		if self.locations[Loc] == 'F' and Dest in world.water:	
 			self.actions.append([Loc, 'attack', Dest,1, None, self])
 			
-		"""if self.locations[Loc] == 'A':
-			if Dest in world.locations[Loc]:
-				self.actions.append([Loc, 'attack', Dest,1, None, self])
-				return 0
-			else:
-				return 1
-		elif self.locations[Loc] == 'F':
-			if Dest in world.water[Loc]:
-				self.actions.append([Loc, 'attack', Dest, 1, None, self])
-				return 0
-			else:
-				return 1
-		else:
-			return 2"""
 	
 	def support(self,Loc, attacked, attacking, world):
+		#Checks if armies are supporting land locations and fleets are supporting water locations
 		if self.locations[Loc] == 'A':
 			if attacking in world.locations[Loc] and attacked in world.locations[attacking]:
 				self.actions.append([Loc, 'support', attacked,1, attacking,self])
@@ -69,6 +42,7 @@ class Country(object):
 				return 1
 	
 	def convoy(self,Loc, Dest, convoying, world):
+		#Checks that convoy is going between locations that are in contact with the location of the convoying fleet
 		if (convoying in world.water[Loc] or convoying in world.locations[Loc]) and Dest in world.water[Loc]:
 			self.actions.append([Loc, 'convoy', Dest,1, convoying, self])
 			return 0
@@ -76,11 +50,6 @@ class Country(object):
 			return 1
 	
 	def addtroop(self, Loc,world): #Method for adding troops
-		"""if Loc in self.locations: 
-			return 1
-		elif len(self.locations) >= len(self.supply):
-			return 2
-		else:"""
 		if Loc in world.locations:
 			self.locations[Loc] = 'A'
 			return 0
@@ -115,16 +84,18 @@ class Country(object):
 				self.hold(locate)
 		
 		act_list = self.actions
-		self.actions = []
+		self.actions = []	#Clear actions so they are not retained for next turn
 		return act_list
 		
 		
 	def update(self, actions, incomplete, world):
+		#Finds all actions that are conducted by the current country
 		for action in actions:
 			if action[5] == self:
 				check = self.movetroop(action[0], action[2])
 				if not check == 0:
 					error = True
+		#Finds all retreats that are conducted by the current country
 		for action in incomplete:
 			if action[5] == self:
 				self.subtroop(action[0])
@@ -132,7 +103,7 @@ class Country(object):
 			
 		world.update_supply()	
 				
-		if world.fall:
+		if world.fall:	#Troops are only added in the fall
 			if len(self.supply) > len(self.locations):
 				#message to user for adding troops or add troops at random supply center
 				viable = []
@@ -178,24 +149,3 @@ if __name__ == "__main__":
 	test_2(w1)
 	w1.turn()
 	w1.turn()
-	
-	for country in w1.countries:
-		print country.locations
-		print country.supply
-		print 
-	
-	
-	
-	
-	"""c1 = Country([1,3,5], [2,3], "Player 1", "p123")
-	c2 = Country([7], [7, 10], "Player 2", "p1234")
-	print c1.addtroop(4)
-	print c1.movetroop(5,5)
-	print c2.addtroop(10)
-	actlist = [[1,"attack",2, 1, None, c1]]
-	c1.update(actlist,[])
-	c2.update(actlist,[])
-	print c1.locations
-	print c2.locations"""
-	
-	
