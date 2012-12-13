@@ -1,9 +1,13 @@
 class world (object):
 	
+	# Has list of all the supply centers, list of all oceans, dictionary that maps from each land location to its adjacent land locations, and dictionary that maps from each water location to its adjacent locations. 
 	def __init__ (self, countries):
 		self.countries = countries
 		self.supplys = ['CAC', 'MAC','SAC', 'MCR', 'LIB', 'MEZ', 'ADM', 'DIH', 'FAC', 'LDK', 'WHW', 'WHE', 'WHN', 'EHE', 'EHN', 'EHW', 'NGL', 'CHL', 'LCC', 'KAT', 
 		'NGL', 'TTT', 'NWH', 'BBQ', 'SLB', 'SLR', 'WEH', 'NML', 'SSA', 'LAS', 'MSO', 'ROD', 'BAB', 'TRM', 'ESC', 'HDK', 'SLA', 'BSF', 'BLF', 'ESC' ]
+
+		self.waterlist  = ['OVL', 'OWO', 'OSO', 'BABO', 'OCR', 'OFA', 'CCC', 'WWS', 'BAS', 'LBO', 'SSS', 'PBO' , 'BAJ', 'HPV', 'SBO']
+		
 		self.locations = {'BAB':['TRM','FAC','VMO','MCR','CHL','STR'],
 			'CHR':['BAB','MCR','CAC','LAS','OMM','STR','ROD'],
 			'MCR':['VMO','CAC','CHR','BAB'],
@@ -69,8 +73,6 @@ class world (object):
 			'VMO':['BAB','MCR'],
 			'LCC':['KAT','DIT','SGL','CHL']}
 
-		self.waterlist  = ['OVL', 'OWO', 'OSO', 'BABO', 'OCR', 'OFA', 'CCC', 'WWS', 'BAS', 'LBO', 'SSS', 'PBO' , 'BAJ', 'HPV', 'SBO']
-		
 		self.water = {
 			'SLA':['NLA','OWO'],
 			'NLA':['SLA','HDK','OWO','OVL'],
@@ -128,18 +130,11 @@ class world (object):
 		self.fall = True
 		
 		
-	
-			
-	def update(self, actions):
-		pass
-		
-		
-	def reset_troops (self):
-		pass
 
-	#round grabs all the moves from the countries and categorizes them. It then runs the supports to addall the strengths. Then it checks if the convoys go through. 
-	#Finally it takes the updated attacks and sees which will actually go through. Finally it checks all the approved attacks to see if there are any conflicts. 
-	# Then it updates all the countries. 
+	# turn() grabs all the moves from the countries and categorizes them. It then runs the supports to add all the strengths. 
+	# Then, it checks if the convoys go through. Then, it takes the updated attacks and sees which will actually go through. 
+	# It checks all the approved attacks to see if there are any conflicts between seperate attacks. 
+	#  Finally, it updates all the countries with their new locations and supply centers. 
 	def turn(self):
 		round_actions=[]
 		attacks = {}
@@ -148,13 +143,10 @@ class world (object):
 		approved_attacks = []
 		final_attacks = []
 		self.fall = not self.fall
-
-		#CHANGED self.countries to list of countries with lists of actions!
+		#Put all the moves in dictionaries
 		for country in self.countries:
-			#How do I clear round actioms?
-			#CHANGED HERE TO
-			actions = country.get_actions()
-			
+			actions = country.get_actions()	
+
 			for action in actions:
 				round_actions.append(action)
 				
@@ -165,37 +157,40 @@ class world (object):
 				if action[1] == "convoy":
 					convoys[action[0]] = action
 
-		#self.attacks(attacks)
+		# for each type of move, resolve them
 		attacks,convoys = self.resolve_supports(supports, attacks, convoys)
 		attacks = self.resolve_convoys(convoys, attacks)
+		#The difference between resolve attacks and update is that resolve attacks checks whether the attack is being cut off or cancelled 
+		#while update checks if the attack conflicts with other attacks.   
 		approved_attacks = self.resolve_attacks(attacks, convoys, supports)
-		#for attack in approved_attacks:
-			#print attack
+		
+		#switch from a dictionary to a list
+
 		list_attacks = []
 		for attack in attacks:
 			list_attacks.append(attacks[attack])
+		
 		final_attacks = self.update(list_attacks) 
 		
 		for country in self.countries:
 			country.update(final_attacks[0], final_attacks[1],self)
 
 		return final_attacks
-		#Do non attack retreats
 
 
 
 
-	#Takes a move and the attacks in that turn and checks if the attacks will affect this move and make it not happen. If there appears to be conflict it checks 
+	#Takes a move and the attacks in that turn and checks if the attacks will affect this move and cause it not to happen. 
+	#If there appears to be conflict it checks, if the conflicting attack has a conflict recursively
 	def check_conflict (self, move, attacks):
 		for attack in attacks:
-
 			if attacks[attack][2] == move[0]:
 				if not self.check_conflict( attacks[attack], attacks):
 					return True
 		return False
 
 
-
+	# This goes through each support, checks if it is conflicted, and if it is oked, increases the strength of the move that is being supported	
 	def resolve_supports (self, supports, attacks, convoys):
 		deletes = []
 		for support in supports:
@@ -207,25 +202,25 @@ class world (object):
 					if supports[support][4] == convoys[convoy][0] and supports[support][2] == convoys[convoy][2]:
 						convoys[convoy][3] +=1
 			else: 
-				#print supports[support]
 				attacks[supports[support][0]] = [supports[support][0], "attack" , supports[support][0], 1, None, supports[support][5]]
 				deletes.append(support)
 		for delete in deletes:
 			del supports[support] 
 							
 		return (attacks,convoys)
-	
+
+	#Goes through each convoy, checks for conflicts. If there is a conflict, it cancels the attack being convoyed.
 	def resolve_convoys (self, convoys, attacks):
 		for convoy in convoys:
 			#IF there is a conflict, change the attack so it doesn't move. 
 			if self.check_conflict(convoys[convoy], attacks):
 				if convoys[convoy][4] in attacks:
-					#BUG
 					if convoys[convoy][2] == attacks[convoys[convoy][4]][2]:
 						attacks[convoys[convoy][4]][2] = attacks[convoys[convoy][4]][0]
 		
 		for attack in attacks:
 			atk = True
+			#checking if its trying to move to non-adjacent spot. if so, need convoy 
 			if attacks[attack][2] not in self.locations[attacks[attack][0]]:
 				atk = False
 				#check if being convoyed
@@ -236,7 +231,7 @@ class world (object):
 				if not atk:
 					attacks[attack][2] = attacks[attack][0]		
 		return attacks
-
+	#Checks if move is apprive or is a hold. Returns all the approved attacks. 
 	def resolve_attacks (self, attacks, convoys, supports):
 		approved_attacks =[]
 		for attack in attacks:
@@ -244,7 +239,7 @@ class world (object):
 				approved_attacks.append(attacks[attack])
 		return approved_attacks
 		
-	
+	#This checks approves attack by checking if it is attacking an occupied place. If not, they're approved. If so, we check who'd win then decide.
 	def approve_attack (self, move, attacks, convoys, supports):
 		#Check if place being attacked is even occupied, if not just approve attack(resolve two different attacks later)
 		if move[2] in attacks:
@@ -267,17 +262,16 @@ class world (object):
 				return False 
 		else:
 			return True  
-	
+	#This takes the appoved attacks and checks fo diffeent types of conflicts. For each attack, they're either approved, cancelled, delayed 
+	#(wait  until the destination is set before figuing out what to do)  
 	def update (self, attacks):
 		final_attacks = []
 		incomplete = [] 
 		waitlist = []
 		next_list = attacks
-		#while not next_list == []:
 		for atk in next_list:
 			conflict = False
 			retreat = False
-			#attacked = False
 			cancelled = False
 			wait = False
 			for atk2 in next_list:
@@ -329,23 +323,19 @@ class world (object):
 			del next_list[next_list.index(move)]
 		for move in incomplete:
 			del next_list[next_list.index(move)]
-		#for move in waitlist:
-		#	del next_list[next_list.index(move)]
-
+		
 		if next_list == waitlist:
 			final_attacks.extend(waitlist)
 			return [final_attacks, incomplete]
 		else:
-			#for move in waitlist:
-			#	next_list.append(move)
 			update_return = self.update(next_list)
 			for attack in update_return[0]:
 				final_attacks.append(attack)
 			for incomp in update_return[1]:
 				incomplete.append(incomp)
 			return [final_attacks, incomplete]
-			
-
+		
+	#This updates which each countries supply centers based on the completed attacks. 
 	def update_supply(self):
 		loc_list = []
 		sup_list = []
@@ -354,10 +344,7 @@ class world (object):
 				loc_list.append([loc, country])
 			for sup in country.supply:
 				sup_list.append([sup, country])
-			"""for sup in self.supplys:
-				if sup not in sup_list:
-					sup_list.append([sup,None])"""
-		
+			
 		for loc in loc_list:
 			for sup in sup_list:
 				if loc[0] == sup[0]:
@@ -370,68 +357,3 @@ class world (object):
 		
 		for sup in sup_list:
 			sup[1].supply.append(sup[0])
-		#if attacking its strength cannot defend it 
-#update non attack
-
-					#if [atk][0]
-					#	if conflict
-#						pass
-					
-
-
-		#check for two things entering the same spot
-
-	
-			#Attack 
-
-#[Current Location, "attack", Location attacking, 1, None ,Country]
-if __name__ == "__main__":
-		
-	country1 = [["1", "attack", "2", 1, None, []],["3", "support", "2", 1, "1", []],["10", "attack", "11", 1, None, []], ["11", "attack", "12", 1, None, []], ["12", "attack", "10", 1, None, []]]
-	country2 = [["2", "attack", "2", 1, None,[]],["4", "attack", "13", 1, None, []], ["9", "attack", "3", 1, None, []] ]
-	country3 = [["5","convoy", "7", 1, "6", []],["6", "attack", "7", 1, None, []], ["8", "attack", "5", 1, None, []]]
-	countries = (country1, country2, country3)
-	 #[this place, support, where the place is going, strength, who is going there]
-	#for convoy support  [this place, support, where the army is going, strength, where the ship is]
-	# convoy [place, convoy, where thing is going, str, who is going ]
-	wo = world(countries)
-	wo.round()
-	
-	print "hi"
-
-
-
-	
-	
-	def test ():
-		#test Hold and unobjected attackS
-
-		country1 = [["1", "attack", "3", 1, None, []]]
-		country2 = [["2", "attack", "2", 1, None,[]]]
-		expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
-		expected_result.sort() 
-		wo1 = world(countries)
-		results  = wo1.round()
-		results.sort() 
-		if not results == expected_result:
-			print "Failed Test1, Holds and unobjected attacks"
-
-		#test attackS
-
-
-		# 
-		country1 = [["1", "attack", "2", 1, None, []],["3", "attack", "5", 1, None, []],["4", "attack", "5", 1, "4", []], ]
-		country2 = [["2", "attack", "2", 1, None,[]],["5", "attack", "5", 1, None, []]]
-		expected_result = [["1", "attack", "3", 1, None, []], ["2", "attack", "2", 1, None,[]]]
-		expected_result.sort() 
-		wo1 = world(countries)
-		results  = wo1.round()
-		results.sort() 
-		if not results == expected_result:
-			print "Failed Test1, Holds and unobjected attacks"
-
-
-		
-
-
-#
